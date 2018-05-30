@@ -5,20 +5,27 @@ const mapStateToProps = reduxState => ({
     reduxState,
 });
 
+const emptyPlant = {
+    name: '',
+    kingdom: '',
+    clade: '',
+    order: '',
+    family: '',
+    subfamily: '',
+    genus: '',
+}
+
 class NewPlantForm extends Component {
     state = {
-        newPlant: {
-            id: 4,
-            name: ''
-        }
+        newPlant: emptyPlant,
     }
 
-    handleNameChange = event => {
-        console.log('event happended')
+    handleChange = event => {
+        console.log('event happened')
         this.setState({
             newPlant: {
                 ...this.state.newPlant,
-                name: event.target.value,
+                [event.target.name]: event.target.value,
             }
         });
     }
@@ -27,10 +34,7 @@ class NewPlantForm extends Component {
         event.preventDefault();
         this.props.dispatch({ type: 'ADD_PLANT', payload: this.state.newPlant })
         this.setState({
-            newPlant: {
-                id: this.state.newPlant.id + 1,
-                name: '',
-            }
+            newPlant: emptyPlant,
         });
     }
 
@@ -40,7 +44,14 @@ class NewPlantForm extends Component {
                 <h3>This is the form</h3>
                 <pre>{JSON.stringify(this.state)}</pre>
                 <form onSubmit={this.addNewPlant}>
-                    <input type='text' value={this.state.newPlant.name} onChange={this.handleNameChange} />
+                    <input type='text' value={this.state.newPlant.name} name="name" onChange={this.handleChange} />
+                    <input type='text' value={this.state.newPlant.kingdom} name="kingdom" onChange={this.handleChange} />
+                    <input type='text' value={this.state.newPlant.clade} name="clade" onChange={this.handleChange} />
+                    <input type='text' value={this.state.newPlant.order} name="order" onChange={this.handleChange} />
+                    <input type='text' value={this.state.newPlant.family} name="family" onChange={this.handleChange} />
+                    <input type='text' value={this.state.newPlant.subfamily} name="subfamily" onChange={this.handleChange} />
+                    <input type='text' value={this.state.newPlant.genus} name="genus" onChange={this.handleChange} />
+
                     <input type='submit' value='Add New Plant' />
                 </form>
             </div>

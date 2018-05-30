@@ -12,13 +12,15 @@ import App from './App';
 function* rootSaga() {
   // yield takeEvery('SET_ELEMENTS', firstSaga);
   yield takeEvery('GET_PLANTS', getPlants);
+  yield takeEvery('ADD_PLANT', addPlant);
+  yield takeEvery('DELETE_PLANT', deletePlant);
 }
 
 function* getPlants() {
   try {
     const plantResponse = yield call(axios.get, '/api/plant');
     yield put({
-      type: 'ADD_PLANTS',
+      type: 'PLANT_LIST',
       payload: plantResponse.data,
     });
   } catch (error) {
@@ -26,11 +28,27 @@ function* getPlants() {
   }
 }
 
+function* addPlant(action) {
+  try {
+    yield call(axios.post, '/api/plant', action.payload);
+    yield put({type: 'GET_PLANTS'});
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function* deletePlant(action) {
+  try {
+    yield call(axios.delete, '/api/plant/?id=' + action.payload);
+    yield put({type: 'GET_PLANTS'});
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 const plantList = (state = [], action) => {
   switch (action.type) {
-    case 'ADD_PLANT':
-      return [ ...state, action.payload ]
-    case 'ADD_PLANTS':
+    case 'PLANT_LIST':
       return action.payload;
     default:
       return state;
